@@ -1,21 +1,22 @@
 {
   "project_info": {
-    "project_number": "YOUR_PROJECT_NUMBER_HERE",
-    "project_id": "csc322-starter-project-2023",
-    "storage_bucket": "csc322-starter-project-2023.appspot.com"
+    "project_number": "170684717290",
+    "project_id": "stock-market-finalproject",
+    "storage_bucket": "stock-market-finalproject.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "YOUR_APP_ID_HERE",
+        "mobilesdk_app_id": "1:170684717290:android:e919a990bf3f9fbebc9f93",
         "android_client_info": {
-          "package_name": "com.example.safe_alert"
+          "package_name": "com.csc322.final"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "YOUR_KEY_HERE"
+
+          "current_key": "AIzaSyDLX0jZbchmGAI9et-FGLcFOCLjj_WKKtA"
         }
       ],
       "services": {
