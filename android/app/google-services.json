@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "170684717290",
+    "project_id": "stock-market-finalproject",
+    "storage_bucket": "stock-market-finalproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170684717290:android:e919a990bf3f9fbebc9f93",
+        "android_client_info": {
+          "package_name": "com.csc322.final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLX0jZbchmGAI9et-FGLcFOCLjj_WKKtA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
