@@ -26,8 +26,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _addFund(Fund fund) {
+    startAmount = 0;
+
     setState(() {
       addedFunds.add(fund);
+      for (final bucket in addedFunds) {
+        startAmount += bucket.amount;
+      }
     });
   }
 
@@ -43,10 +48,6 @@ class _HomePageState extends State<HomePage> {
     Widget stockContent = const Center(
       child: Text("No stocks found. Start adding some!"),
     );
-
-    for (final bucket in addedFunds) {
-      startAmount = bucket.amount;
-    }
 
     // if (stocks.isNotEmpty) {
     //   mainContent = StockList(
@@ -108,7 +109,8 @@ class _HomePageState extends State<HomePage> {
                       width: 15,
                     ),
                     Text(
-                      stocksBought.toStringAsFixed(2),
+                      '\$${balance.toStringAsFixed(2)}',
+                      // stocksBought.toStringAsFixed(2),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ],
