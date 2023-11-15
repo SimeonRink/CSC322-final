@@ -79,7 +79,6 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Card(
-        color: Color.fromARGB(255, 240, 240, 240),
         margin: EdgeInsets.all(20),
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -119,7 +118,9 @@ class _AuthFormState extends State<AuthForm> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(labelText: 'First Name'),
+                    decoration: InputDecoration(
+                      labelText: 'First Name',
+                    ),
                     onSaved: (value) {
                       _firstName = value!;
                     },
