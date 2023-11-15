@@ -171,19 +171,22 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       body: LayoutBuilder(
         builder: (ctx, constraints) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: constraints.maxWidth * 0.6,
-                child: Image.asset('assets/images/download.png',
-                    fit: BoxFit.cover),
-              ),
-              AuthForm(
-                _submitAuthForm,
-                _isLoading,
-              ),
-            ],
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: constraints.maxHeight * 0.1),
+                Container(
+                  width: constraints.maxWidth * 0.6,
+                  child:
+                      Image.asset('assets/images/image.png', fit: BoxFit.cover),
+                ),
+                AuthForm(
+                  _submitAuthForm,
+                  _isLoading,
+                ),
+              ],
+            ),
           );
         },
       ),

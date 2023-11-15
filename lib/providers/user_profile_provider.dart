@@ -9,8 +9,7 @@ import '../db_helpers/firebase/db_user_profile.dart';
 import '../models/user_profile.dart';
 
 // Constants
-const ImageProvider GENERIC_IMAGE =
-    const AssetImage('assets/images/download.png');
+const ImageProvider GENERIC_IMAGE = const AssetImage('assets/images/image.png');
 
 //////////////////////////////////////////////////////////////////
 // State class that manages order variables; implements
