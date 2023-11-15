@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Safe Alert',
+        title: 'GameStock',
         theme: ThemeData(
           backgroundColor: Colors.blueGrey,
           primaryColor: Colors.white,
@@ -54,8 +54,8 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          colorScheme:
-              ColorScheme.fromSwatch(primarySwatch: Colors.grey).copyWith(secondary: Colors.black),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
+              .copyWith(secondary: Colors.black),
         ),
         home: SplashScreen(),
         routes: {
