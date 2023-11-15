@@ -77,7 +77,7 @@ class _AuthFormState extends State<AuthForm> {
   ////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
       child: Card(
         color: Color.fromARGB(255, 240, 240, 240),
         margin: EdgeInsets.all(20),
@@ -165,8 +165,11 @@ class _AuthFormState extends State<AuthForm> {
                     ),
                   if (!widget.isLoading)
                     TextButton(
-                      style: TextButton.styleFrom(primary: Theme.of(context).splashColor),
-                      child: Text(_isLogin ? 'Create new account' : 'I already have an account'),
+                      style: TextButton.styleFrom(
+                          primary: Theme.of(context).splashColor),
+                      child: Text(_isLogin
+                          ? 'Create new account'
+                          : 'I already have an account'),
                       onPressed: () {
                         setState(() {
                           _isLogin = !_isLogin;

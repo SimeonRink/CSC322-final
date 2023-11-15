@@ -176,7 +176,8 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               Container(
                 width: constraints.maxWidth * 0.6,
-                child: Image.asset('assets/images/logo.jpg', fit: BoxFit.cover),
+                child: Image.asset('assets/images/download.png',
+                    fit: BoxFit.cover),
               ),
               AuthForm(
                 _submitAuthForm,
