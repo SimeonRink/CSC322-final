@@ -49,13 +49,6 @@ class _HomePageState extends State<HomePage> {
       child: Text("No stocks found. Start adding some!"),
     );
 
-    // if (stocks.isNotEmpty) {
-    //   mainContent = StockList(
-    //       expenses: registeredExpenses, onRemoveExpenses: _removeExpense);
-    // }
-
-    print(addedFunds);
-
     if (addedFunds.isEmpty) {
       content = AlertDialog(
         title: Text('You have no funds!'),
@@ -94,10 +87,6 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 200,
                 ),
-                // Expanded(
-                //     child: LineChartWidget(
-                //   incomeBalances: incomeBalances,
-                // )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -137,29 +126,6 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
-
-    // for (int i = 0; i < registeredIncomes.length; i++) {
-    //   accountBalance += registeredIncomes[i].amount;
-    // }
-    // for (int i = 0; i < registeredExpenses.length; i++) {
-    //   accountBalance -= registeredExpenses[i].amount;
-    // }
-
-    // for (int i = 0; i < 12; i++) {
-    //   for (Income income in registeredIncomes) {
-    //     if (income.date.month == i && income.date.year == 2023) {
-    //       balance += income.amount;
-    //     }
-    //   }
-
-    //   for (Expense expense in registeredExpenses) {
-    //     if (expense.date.month == i && expense.date.year == 2023) {
-    //       balance -= expense.amount;
-    //     }
-    //   }
-    //   incomeBalances.add(balance);
-    // }
-
     return content;
   }
 }
