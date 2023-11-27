@@ -81,19 +81,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _getMyStocks();
-    // setState(() {
-    //   _updateFunds();
-    // });
+    _updateFunds();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Widget content;
-
-    // setState(() {
-    _updateFunds();
-    // });
 
     content = Scaffold(
       appBar: AppBar(
