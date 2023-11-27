@@ -31,6 +31,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  _updateFunds() async {
+    CollectionReference stockDataCollection =
+        FirebaseFirestore.instance.collection('userStocks');
+
+    var currentData = await stockDataCollection.doc(_user!.email).get();
+
+    setState(() {
+      funds = (currentData.data() as Map<String, dynamic>)['funds'];
+    });
+  }
+
   void _addFund(Fund fund) async {
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
@@ -70,25 +81,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _getMyStocks();
+    // setState(() {
+    //   _updateFunds();
+    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Widget content;
-    // double balance = startAmount;
 
-    // if (addedFunds.isEmpty) {
-    //   content = AlertDialog(
-    //     title: Text('You have no funds!'),
-    //     actions: <Widget>[
-    //       TextButton(
-    //         onPressed: _openAddFundOverlay,
-    //         child: Text('Add Funds'),
-    //       ),
-    //     ],
-    //   );
-    // } else {
+    // setState(() {
+    _updateFunds();
+    // });
+
     content = Scaffold(
       appBar: AppBar(
         title: const Text('Investing'),
