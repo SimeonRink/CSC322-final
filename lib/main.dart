@@ -1,5 +1,6 @@
 // Flutter imports
 import 'package:egr423_starter_project/main_page.dart';
+import 'package:egr423_starter_project/screens/landing_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Safe Alert',
+        title: 'GameStock',
         darkTheme: ThemeData.dark().copyWith(
           useMaterial3: true,
           colorScheme: kDarkColorScheme,
