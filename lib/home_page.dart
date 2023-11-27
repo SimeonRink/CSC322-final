@@ -5,9 +5,6 @@ import 'package:egr423_starter_project/widgets/navigation/app_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-// final List<Fund> addedFunds = [];
-// double startAmount = 0;
-
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
