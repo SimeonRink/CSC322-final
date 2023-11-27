@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:egr423_starter_project/stock_details_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -152,7 +153,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        //navigate to details screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StockDetailsScreen()),
+                        );
                       },
                       child: Text(
                         'View Details',
