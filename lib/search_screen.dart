@@ -17,6 +17,7 @@ class _SearchScreenState extends State<SearchScreen> {
   String stockName = '';
   final _user = FirebaseAuth.instance.currentUser;
   bool following = false;
+  bool isLoading = false;
 
   void _followStock() async {
     CollectionReference stockDataCollection =
@@ -73,6 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
         following = stockNames.contains(stockName);
 
         setState(() {
+          isLoading = false;
           content = _buildStockCard(result, stockNames.contains(stockName));
         });
       } else {
@@ -197,26 +199,46 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     }
 
+    if (isLoading) {
+      content = Padding(
+        padding: EdgeInsetsDirectional.only(top: 100),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Search Stocks'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Enter search term',
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Enter search term',
+                  labelStyle: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+                onSubmitted: (String searchStock) {
+                  stockName = searchStock.toUpperCase();
+                  setState(() {
+                    isLoading = true;
+                  });
+                  _loadStock(stockName);
+                },
               ),
-              onSubmitted: (String searchStock) {
-                stockName = searchStock.toUpperCase();
-                _loadStock(stockName);
-              },
-            ),
-            content,
-            (stockName != '') ? _followButton() : Container(),
-          ],
+              content,
+              (stockName != '' && !isLoading) ? _followButton() : Container(),
+            ],
+          ),
         ),
       ),
     );
