@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // File imports
 import './auth_screen.dart';
-import './landing_screen.dart';
 
 //////////////////////////////////////////////////////////////////
 // StateLESS widget which only has data that is initialized when

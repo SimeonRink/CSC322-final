@@ -156,7 +156,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => StockDetailsScreen()),
+                              builder: (context) => StockDetailsScreen(
+                                    stockName: stockName,
+                                  )),
                         );
                       },
                       child: Text(
@@ -180,7 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
         _followStock();
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue, // Set button color
+        backgroundColor: Colors.blue,
       ),
       child: Text(
         ((following) ? 'Unfollow Stock' : 'Follow Stock'),
