@@ -79,7 +79,9 @@ class _SearchScreenState extends State<SearchScreen> {
       final response = await http.get(Uri.parse(url));
       print(response.statusCode);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 ||
+          url ==
+              'https://api.polygon.io/v2/aggs/ticker//prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg') {
         final Map<String, dynamic> data = json.decode(response.body);
 
         print(data['status']);
@@ -143,42 +145,6 @@ class _SearchScreenState extends State<SearchScreen> {
     } catch (error) {
       print('Error: $error');
     }
-  }
-
-  Card _buildStockCards(String stock) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${stock}',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.lightBlue, // Set text color
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _loadStock(stock);
-              },
-              child: Text(
-                'View',
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _followButton() {
