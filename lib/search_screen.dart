@@ -279,7 +279,21 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               content,
               (stockName != '' && !isLoading && showFollowButton)
-                  ? _followButton()
+                  ? Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isViewing = false;
+                              stockName = '';
+                            });
+                          },
+                          icon: Icon(Icons.arrow_back),
+                        ),
+                        SizedBox(width: 50),
+                        _followButton(),
+                      ],
+                    )
                   : Container(),
             ],
           ),
