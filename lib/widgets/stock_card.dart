@@ -97,6 +97,21 @@ class StockCard extends StatelessWidget {
                           ),
                         ),
                       ],
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StockDetailsScreen(
+                              stockName: stockName,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'View Details',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
                   ],
                 ),

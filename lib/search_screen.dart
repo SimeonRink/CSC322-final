@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:egr423_starter_project/stock_details_screen.dart';
+
 import 'package:egr423_starter_project/widgets/stock_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
       followedStocks = stockNames;
     });
   }
+  bool showFollowButton = true;
 
   void _followStock() async {
     CollectionReference stockDataCollection =
@@ -75,12 +76,35 @@ class _SearchScreenState extends State<SearchScreen> {
 
     try {
       final response = await http.get(Uri.parse(url));
+      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
+        print(data['status']);
+
         // Access the "results" list and get the first item
-        final result = data['results'][0];
+        var result;
+        if (data['results'] == null) {
+          setState(() {
+            isLoading = false;
+            showFollowButton = false;
+            content = Padding(
+              padding: EdgeInsetsDirectional.only(top: 100),
+              child: const Center(
+                child: Text(
+                  'Could not find that stock. Try again!',
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
+                ),
+              ),
+            );
+          });
+          return;
+        } else {
+          result = data['results'][0];
+        }
 
         CollectionReference stockDataCollection =
             FirebaseFirestore.instance.collection('userStocks');
@@ -100,13 +124,13 @@ class _SearchScreenState extends State<SearchScreen> {
           isViewing = true;
         });
       } else {
-        // NOT WORKING YET
+        // not working
         setState(() {
           content = Padding(
             padding: EdgeInsetsDirectional.only(top: 100),
             child: const Center(
               child: Text(
-                'Could not find that stock. Try again!',
+                'API not working. Try again!',
                 style: TextStyle(
                   fontSize: 30,
                 ),
@@ -162,7 +186,7 @@ class _SearchScreenState extends State<SearchScreen> {
         _followStock();
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue, // Set button color
+        backgroundColor: Colors.blue,
       ),
       child: Text(
         ((following) ? 'Unfollow Stock' : 'Follow Stock'),
@@ -252,7 +276,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
               content,
-              (stockName != '' && !isLoading) ? _followButton() : Container(),
+              (stockName != '' && !isLoading && showFollowButton)
+                  ? _followButton()
+                  : Container(),
             ],
           ),
         ),
