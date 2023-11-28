@@ -76,12 +76,15 @@ class _SearchScreenState extends State<SearchScreen> {
         'https://api.polygon.io/v2/aggs/ticker/$searchStock/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
+      if (url ==
+          'https://api.polygon.io/v2/aggs/ticker//prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg') {
+        isLoading = false;
+        return;
+      }
       final response = await http.get(Uri.parse(url));
       print(response.statusCode);
 
-      if (response.statusCode == 200 ||
-          url ==
-              'https://api.polygon.io/v2/aggs/ticker//prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg') {
+      if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
         print(data['status']);
@@ -199,7 +202,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               SizedBox(height: 20),
               for (var i = 0; i < followedStocks.length; i++)
-                // _buildStockCards(followedStocks[i]),
                 StockWidget(stock: followedStocks[i]),
             ]),
           ),

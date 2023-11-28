@@ -80,22 +80,6 @@ class StockCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StockDetailsScreen(
-                                  stockName: stockName,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Buy/Sell',
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ),
                       ],
                     ),
                   ],
