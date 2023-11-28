@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:egr423_starter_project/widgets/stock_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,27 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   var content;
   String stockName = '';
+  List<dynamic> followedStocks = [];
   final _user = FirebaseAuth.instance.currentUser;
   bool following = false;
   bool isLoading = false;
+  bool isViewing = false;
+
+  void _getStocks() async {
+    CollectionReference stockDataCollection =
+        FirebaseFirestore.instance.collection('userStocks');
+
+    // Get the current data in the document
+    var currentData = await stockDataCollection.doc(_user!.email).get();
+
+    // Get the current array of stock names
+    var stockNames =
+        (currentData.data() as Map<String, dynamic>)['stockNames'] ?? [];
+    //Update the UI with the new following status
+    setState(() {
+      followedStocks = stockNames;
+    });
+  }
   bool showFollowButton = true;
 
   void _followStock() async {
@@ -46,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     // Update the UI with the new following status
     setState(() {
+      followedStocks = stockNames;
       following = !following;
     });
   }
@@ -101,6 +121,7 @@ class _SearchScreenState extends State<SearchScreen> {
         setState(() {
           isLoading = false;
           content = StockCard(stockName: stockName, result: result);
+          isViewing = true;
         });
       } else {
         // not working
@@ -123,6 +144,42 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  Card _buildStockCards(String stock) {
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${stock}',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.lightBlue, // Set text color
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _loadStock(stock);
+              },
+              child: Text(
+                'View',
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _followButton() {
     return ElevatedButton(
       onPressed: () {
@@ -138,19 +195,48 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getStocks();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (stockName == '') {
-      content = Padding(
-        padding: EdgeInsetsDirectional.only(top: 100),
-        child: const Center(
-          child: Text(
-            'No stock found yet. Start searching!',
-            style: TextStyle(
-              fontSize: 30,
+    if (stockName == '' && !isViewing) {
+      if (followedStocks.isEmpty) {
+        content = Padding(
+          padding: EdgeInsetsDirectional.only(top: 100),
+          child: const Center(
+            child: Text(
+              'No stock found yet. Start searching!',
+              style: TextStyle(
+                fontSize: 30,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      } else {
+        content = SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(children: [
+              Row(
+                children: [
+                  Text(
+                    'Stocks Following:',
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              for (var i = 0; i < followedStocks.length; i++)
+                _buildStockCards(followedStocks[i]),
+            ]),
+          ),
+        );
+      }
     }
 
     if (isLoading) {
