@@ -1,4 +1,5 @@
 // Flutter external imports
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -97,12 +98,28 @@ class _AuthScreenState extends State<AuthScreen> {
 
         // If made it here, authentication was successful...load user profile
         await _userProfileProvider.fetchUserProfileIfNeeded();
+
+        // create documuents in userStocks collection uncomment for testing obly otherwise new documents will constantly be created
+        // CollectionReference collectionReference =
+        //     FirebaseFirestore.instance.collection('userStocks');
+        // await collectionReference.doc(email).set({
+        //   'stockNames': [],
+        //   'funds': 0.0,
+        // });
       } else {
         //...else, signup for new account with email/password
         authResult = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
+
+        // create documuents in userStocks collection
+        CollectionReference collectionReference =
+            FirebaseFirestore.instance.collection('userStocks');
+        await collectionReference.doc(email).set({
+          'stockNames': [],
+          'funds': 0.0,
+        });
 
         // Once account is created, send verification email
         User? user = _auth.currentUser;

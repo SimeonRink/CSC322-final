@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Safe Alert',
+        title: 'GameStock',
         darkTheme: ThemeData.dark().copyWith(
           useMaterial3: true,
           colorScheme: kDarkColorScheme,
