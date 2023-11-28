@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class StockDetailsScreen extends StatefulWidget {
-  const StockDetailsScreen({super.key});
+  const StockDetailsScreen({super.key, required this.stockName});
+
+  final String stockName;
 
   @override
   State<StockDetailsScreen> createState() => _StockDetailsScreenState();
@@ -15,7 +17,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         title: const Text('Stock Details'),
       ),
       body: Center(
-        child: Text('Stock Details'),
+        child: Text('${widget.stockName} Details'),
       ),
     );
   }
