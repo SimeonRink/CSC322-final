@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-
 import 'package:egr423_starter_project/widgets/stock_card.dart';
+import 'package:egr423_starter_project/widgets/stock_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -38,6 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
       followedStocks = stockNames;
     });
   }
+
   bool showFollowButton = true;
 
   void _followStock() async {
@@ -232,7 +233,8 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               SizedBox(height: 20),
               for (var i = 0; i < followedStocks.length; i++)
-                _buildStockCards(followedStocks[i]),
+                // _buildStockCards(followedStocks[i]),
+                StockWidget(stock: followedStocks[i]),
             ]),
           ),
         );
