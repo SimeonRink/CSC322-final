@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:egr423_starter_project/stock_details_screen.dart';
+import 'package:egr423_starter_project/widgets/stock_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final _user = FirebaseAuth.instance.currentUser;
   bool following = false;
   bool isLoading = false;
+  bool showFollowButton = true;
 
   void _followStock() async {
     CollectionReference stockDataCollection =
@@ -55,12 +56,35 @@ class _SearchScreenState extends State<SearchScreen> {
 
     try {
       final response = await http.get(Uri.parse(url));
+      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
 
+        print(data['status']);
+
         // Access the "results" list and get the first item
-        final result = data['results'][0];
+        var result;
+        if (data['results'] == null) {
+          setState(() {
+            isLoading = false;
+            showFollowButton = false;
+            content = Padding(
+              padding: EdgeInsetsDirectional.only(top: 100),
+              child: const Center(
+                child: Text(
+                  'Could not find that stock. Try again!',
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
+                ),
+              ),
+            );
+          });
+          return;
+        } else {
+          result = data['results'][0];
+        }
 
         CollectionReference stockDataCollection =
             FirebaseFirestore.instance.collection('userStocks');
@@ -76,16 +100,16 @@ class _SearchScreenState extends State<SearchScreen> {
 
         setState(() {
           isLoading = false;
-          content = _buildStockCard(result, stockNames.contains(stockName));
+          content = StockCard(stockName: stockName, result: result);
         });
       } else {
-        // NOT WORKING YET
+        // not working
         setState(() {
           content = Padding(
             padding: EdgeInsetsDirectional.only(top: 100),
             child: const Center(
               child: Text(
-                'Could not find that stock. Try again!',
+                'API not working. Try again!',
                 style: TextStyle(
                   fontSize: 30,
                 ),
@@ -97,83 +121,6 @@ class _SearchScreenState extends State<SearchScreen> {
     } catch (error) {
       print('Error: $error');
     }
-  }
-
-  Card _buildStockCard(Map<String, dynamic> result, bool isFollowing) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Stock data for ${result['T']} from the previous day',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.lightBlue, // Set text color
-              ),
-            ),
-            SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'High: ${result['h']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Low: ${result['l']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Open: ${result['o']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Close: ${result['c']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Volume: ${result['v']}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => StockDetailsScreen(
-                                    stockName: stockName,
-                                  )),
-                        );
-                      },
-                      child: Text(
-                        'View Details',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _followButton() {
@@ -243,7 +190,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
               content,
-              (stockName != '' && !isLoading) ? _followButton() : Container(),
+              (stockName != '' && !isLoading && showFollowButton)
+                  ? _followButton()
+                  : Container(),
             ],
           ),
         ),
