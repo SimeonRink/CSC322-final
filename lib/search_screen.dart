@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:egr423_starter_project/widgets/stock_card.dart';
 import 'package:egr423_starter_project/widgets/stock_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,6 +24,42 @@ class _SearchScreenState extends State<SearchScreen> {
   bool following = false;
   bool isLoading = false;
   bool isViewing = false;
+
+  void _showDialog(String error) {
+    //find out what platform you are on to have alert dialogs display in the same style
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+          context: context,
+          builder: (ctx) => CupertinoAlertDialog(
+                title: const Text('Invalid input'),
+                content: Text(error),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('Okay'),
+                  ),
+                ],
+              ));
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid input'),
+          content: Text(error),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   void _getStocks() async {
     CollectionReference stockDataCollection =
@@ -146,7 +184,7 @@ class _SearchScreenState extends State<SearchScreen> {
         });
       }
     } catch (error) {
-      print('Error: $error');
+      _showDialog(error.toString());
     }
   }
 
