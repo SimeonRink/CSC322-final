@@ -9,11 +9,13 @@ class buyStock extends StatefulWidget {
       {super.key,
       required this.ticker,
       required this.currentPrice,
-      required this.onBuyStock});
+      required this.onBuyStock,
+      required this.buyingPower});
 
   final void Function(Stocks buy) onBuyStock;
   final String ticker;
   final String currentPrice;
+  final double buyingPower;
 
   @override
   State<buyStock> createState() {
@@ -23,10 +25,10 @@ class buyStock extends StatefulWidget {
 
 class _buyStockState extends State<buyStock> {
   final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
+  final _amountController = TextEditingController(text: '1');
   DateTime _selectedDate = DateTime.now();
-  final _user = FirebaseAuth.instance.currentUser;
   Widget content = const Text('--');
+  String shares = '1';
 
   void _showDialog() {
     //find out what platform you are on to have alert dialogs display in the same style
@@ -67,8 +69,10 @@ class _buyStockState extends State<buyStock> {
   }
 
   void _submitStockData() {
-    final enteredAmount = int.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null ||
+        enteredAmount <= 0 ||
+        enteredAmount * double.parse(widget.currentPrice) > widget.buyingPower;
     if (amountIsInvalid) {
       _showDialog();
       return;
@@ -76,9 +80,10 @@ class _buyStockState extends State<buyStock> {
 
     widget.onBuyStock(
       Stocks(
-        ticker: _titleController.text,
+        ticker: widget.ticker,
         shares: enteredAmount,
         date: _selectedDate,
+        currentPrice: double.parse(widget.currentPrice),
       ),
     );
     Navigator.pop(context);
@@ -113,15 +118,18 @@ class _buyStockState extends State<buyStock> {
                       Expanded(
                         child: Text(
                           widget.ticker,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                       Expanded(
                         child: Text(
                           widget.currentPrice,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                     ],
                   ),
+                  SizedBox(height: 16),
                   if (width >= 600)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,10 +138,14 @@ class _buyStockState extends State<buyStock> {
                         Expanded(
                           child: TextField(
                             controller: _amountController,
+                            onChanged: (value) {
+                              setState(() {
+                                shares = value;
+                              });
+                            },
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                              prefixText: '\$ ',
-                              label: Text('Amount'),
+                              label: Text('Shares'),
                             ),
                           ),
                         ),
@@ -163,10 +175,14 @@ class _buyStockState extends State<buyStock> {
                         Expanded(
                           child: TextField(
                             controller: _amountController,
+                            onChanged: (value) {
+                              setState(() {
+                                shares = value;
+                              });
+                            },
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
-                              prefixText: '\$ ',
-                              label: Text('Amount'),
+                              label: Text('Shares'),
                             ),
                           ),
                         ),
@@ -186,6 +202,43 @@ class _buyStockState extends State<buyStock> {
                         ),
                       ],
                     ),
+                  const SizedBox(height: 25),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Cost:',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                      if (shares != '')
+                        Expanded(
+                          child: Text(
+                            (double.parse(shares) *
+                                    double.parse(widget.currentPrice))
+                                .toStringAsFixed(2),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Buying Power:',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          widget.buyingPower.toString(),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
                   if (width >= 600)
                     Row(

@@ -20,8 +20,16 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
   List boughtStocks = [];
   double shares = 0.0;
   String currentPrice = '';
+  double buyingPower = 0.0;
   final _user = FirebaseAuth.instance.currentUser;
   void _openBuyStockOverlay() async {
+    CollectionReference stockDataCollection =
+        FirebaseFirestore.instance.collection('userStocks');
+    var currentData = await stockDataCollection.doc(_user!.email).get();
+
+    setState(() {
+      buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
+    });
     print(widget.stockName);
     final url =
         'https://api.polygon.io/v2/aggs/ticker/${widget.stockName}/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
@@ -51,6 +59,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
           currentPrice: currentPrice,
           ticker: widget.stockName,
           onBuyStock: _buyStocks,
+          buyingPower: buyingPower,
         ),
       );
     } catch (error) {
@@ -69,44 +78,33 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
     });
   }
 
-//   // Example data for a bought stock
-// String ticker = 'AAPL';
-// int shares = 10;
-
-// // Get the current user document reference
-// DocumentReference userDocRef = collectionReference.doc(email);
-
-// // Get the current data in the document
-// DocumentSnapshot userSnapshot = await userDocRef.get();
-// Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-
-// // Get the current boughtStocks array
-// List<Map<String, dynamic>> boughtStocks = List<Map<String, dynamic>>.from(userData['boughtStocks']);
-
-// // Add the new bought stock to the array
-// boughtStocks.add({
-//   'ticker': ticker,
-//   'shares': shares,
-// });
-
-// // Update the document with the new boughtStocks array
-// await userDocRef.update({'boughtStocks': boughtStocks});
-
   void _buyStocks(Stocks stock) async {
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
 
     var currentData = await stockDataCollection.doc(_user!.email).get();
+    final Map<String, dynamic> stockInfo = {
+      'stockName': stock.ticker,
+      'numberOfShares': stock.shares,
+      'PricePerShare': stock.currentPrice,
+    };
 
-    boughtStocks = (currentData.data() as Map<String, dynamic>)['boughtStocks'];
+    List<Map<String, dynamic>> boughtStocks = List<Map<String, dynamic>>.from(
+        (currentData.data() as Map<String, dynamic>)['boughtStocks'] ?? []);
 
     setState(() {
       // Update funds with the new amount
       shares += stock.shares;
+      buyingPower -= stock.shares * double.parse(currentPrice);
+      boughtStocks.add(stockInfo);
+      print(boughtStocks);
     });
 
     await stockDataCollection.doc(_user!.email).set(
-      {'boughtStocks': shares},
+      {
+        'buyingPower': buyingPower,
+        'boughtStocks': boughtStocks,
+      },
       SetOptions(merge: true),
     );
   }

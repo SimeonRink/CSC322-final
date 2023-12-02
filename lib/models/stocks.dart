@@ -10,11 +10,13 @@ class Stocks {
     required this.shares,
     required this.date,
     required this.ticker,
+    required this.currentPrice,
   });
 
   final String ticker;
-  final int shares;
+  final double shares;
   final DateTime date;
+  final double currentPrice;
 
   get formattedDate {
     return format.format(date);

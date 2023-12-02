@@ -16,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   final _user = FirebaseAuth.instance.currentUser;
   List<String> _stocks = [];
   double funds = 0.0;
+  double buyingPower = 0.0;
 
   void _openAddFundOverlay() {
     showModalBottomSheet(
@@ -46,14 +47,20 @@ class _HomePageState extends State<HomePage> {
     var currentData = await stockDataCollection.doc(_user!.email).get();
 
     funds = (currentData.data() as Map<String, dynamic>)['funds'];
+    buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
 
     setState(() {
       // Update funds with the new amount
       funds += fund.amount;
+      buyingPower += fund.amount;
     });
 
     await stockDataCollection.doc(_user!.email).set(
       {'funds': funds},
+      SetOptions(merge: true),
+    );
+    await stockDataCollection.doc(_user!.email).set(
+      {'buyingPower': buyingPower},
       SetOptions(merge: true),
     );
   }
@@ -117,14 +124,14 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'buying power: ',
+                    'Buying Power: ',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(
                     width: 15,
                   ),
                   Text(
-                    '\$${funds.toStringAsFixed(2)}',
+                    '\$${buyingPower.toStringAsFixed(2)}',
                     // stocksBought.toStringAsFixed(2),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
