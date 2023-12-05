@@ -35,11 +35,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   uuid: ^4.2.1
+  fl_chart: ^0.65.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.3 # To generate icons, run this in terminal:   flutter pub run flutter_launcher_icons:main
+  flutter_launcher_icons: ^0.13.1 # To generate icons, run this in terminal:   flutter pub run flutter_launcher_icons:main
 
 flutter_icons:
   image_path: 'assets/images/image.png'
