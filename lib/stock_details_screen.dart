@@ -75,8 +75,8 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               Container(
-                height: 400,
-                width: 400,
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: MediaQuery.of(context).size.width,
                 child: LineChartWidget(
                   stockClosePrices: stockClosePrices,
                   maxY: max,
