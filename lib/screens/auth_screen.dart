@@ -119,6 +119,7 @@ class _AuthScreenState extends State<AuthScreen> {
         await collectionReference.doc(email).set({
           'stockNames': [],
           'funds': 0.0,
+          'buyingPower': 0.0,
         });
 
         // Once account is created, send verification email

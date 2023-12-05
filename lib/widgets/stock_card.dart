@@ -60,27 +60,21 @@ class StockCard extends StatelessWidget {
                       style: TextStyle(fontSize: 20),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StockDetailsScreen(
-                                  stockName: stockName,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'View Details',
-                            style: TextStyle(fontSize: 15),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StockDetailsScreen(
+                              ticker: stockName,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                      ],
+                        );
+                      },
+                      child: Text(
+                        'View Details',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
                   ],
                 ),
