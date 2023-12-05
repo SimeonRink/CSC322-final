@@ -10,12 +10,14 @@ class buyStock extends StatefulWidget {
       required this.ticker,
       required this.currentPrice,
       required this.onBuyStock,
-      required this.buyingPower});
+      required this.buyingPower,
+      required this.totalShares});
 
   final void Function(Stocks buy) onBuyStock;
   final String ticker;
   final String currentPrice;
   final double buyingPower;
+  final double totalShares;
 
   @override
   State<buyStock> createState() {
@@ -37,8 +39,7 @@ class _buyStockState extends State<buyStock> {
           context: context,
           builder: (ctx) => CupertinoAlertDialog(
                 title: const Text('Invalid input'),
-                content: const Text(
-                    'Please make sure a valid title, amount, date and category was entered.'),
+                content: const Text('Please make sure you have enough funds.'),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -53,8 +54,7 @@ class _buyStockState extends State<buyStock> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Invalid input'),
-          content: const Text(
-              'Please make sure a valid title, amount, date and category was entered.'),
+          content: const Text('Please make sure you have enough funds.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -84,6 +84,7 @@ class _buyStockState extends State<buyStock> {
         shares: enteredAmount,
         date: _selectedDate,
         currentPrice: double.parse(widget.currentPrice),
+        totalShares: widget.totalShares,
       ),
     );
     Navigator.pop(context);
@@ -233,7 +234,7 @@ class _buyStockState extends State<buyStock> {
                       ),
                       Expanded(
                         child: Text(
-                          widget.buyingPower.toString(),
+                          widget.buyingPower.toStringAsFixed(2),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
