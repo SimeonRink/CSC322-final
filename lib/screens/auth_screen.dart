@@ -112,7 +112,9 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
-
+        List<Map<String, dynamic>> boughtStocks = [];
+        List<Map<String, dynamic>> soldStocks = [];
+        List<Map<String, dynamic>> filteredStocks = [];
         // create documuents in userStocks collection
         CollectionReference collectionReference =
             FirebaseFirestore.instance.collection('userStocks');
@@ -120,6 +122,9 @@ class _AuthScreenState extends State<AuthScreen> {
           'stockNames': [],
           'funds': 0.0,
           'buyingPower': 0.0,
+          'boughtStocks': boughtStocks,
+          'soldStocks': soldStocks,
+          'filteredShares': filteredStocks,
         });
 
         // Once account is created, send verification email
