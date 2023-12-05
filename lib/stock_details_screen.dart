@@ -6,17 +6,15 @@ import 'package:egr423_starter_project/buy_stock.dart';
 import 'package:egr423_starter_project/models/stocks.dart';
 import 'package:egr423_starter_project/sell_stock.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:egr423_starter_project/widgets/line_chart_widget.dart';
-import 'dart:convert';
 import 'package:intl/intl.dart';
 
 class StockDetailsScreen extends StatefulWidget {
-  const StockDetailsScreen({super.key, required this.ticker});
+  const StockDetailsScreen({super.key, required this.stockName});
 
-  final String ticker;
+  final String stockName;
 
   @override
   State<StockDetailsScreen> createState() => _StockDetailsScreenState();
@@ -270,6 +268,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
       },
       SetOptions(merge: true),
     );
+  }
 
   double _getMaxY() {
     double max = 0.0;
@@ -297,7 +296,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         .format(DateTime.now().subtract(const Duration(days: 90)));
 
     final url =
-        'https://api.polygon.io/v2/aggs/ticker/${widget.ticker}/range/1/day/$prevDate/$currentDate?adjusted=true&sort=asc&limit=120&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
+        'https://api.polygon.io/v2/aggs/ticker/${widget.stockName}/range/1/day/$prevDate/$currentDate?adjusted=true&sort=asc&limit=120&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -337,7 +336,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
                 ),
               ),
               Text(
-                '${widget.ticker} peaked with a price of \$${max.toStringAsFixed(2)} and bottomed out at \$${min.toStringAsFixed(2)}.',
+                '${widget.stockName} peaked with a price of \$${max.toStringAsFixed(2)} and bottomed out at \$${min.toStringAsFixed(2)}.',
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -386,7 +385,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.ticker} Details'),
+        title: Text('${widget.stockName} Details'),
         actions: [
           ElevatedButton(
             child: const Text('Buy'),

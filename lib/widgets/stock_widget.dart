@@ -34,7 +34,7 @@ class StockWidget extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => StockDetailsScreen(
-                      ticker: stock,
+                      stockName: stock,
                     ),
                   ),
                 );

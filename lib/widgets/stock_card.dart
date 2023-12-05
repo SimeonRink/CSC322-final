@@ -66,7 +66,7 @@ class StockCard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => StockDetailsScreen(
-                              ticker: stockName,
+                              stockName: stockName,
                             ),
                           ),
                         );
