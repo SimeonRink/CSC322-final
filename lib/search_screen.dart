@@ -24,6 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool following = false;
   bool isLoading = false;
   bool isViewing = false;
+  bool showFollowButton = true;
 
   void _showDialog(String error) {
     //find out what platform you are on to have alert dialogs display in the same style
@@ -77,8 +78,6 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  bool showFollowButton = true;
-
   void _followStock() async {
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
@@ -120,12 +119,9 @@ class _SearchScreenState extends State<SearchScreen> {
         return;
       }
       final response = await http.get(Uri.parse(url));
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-
-        print(data['status']);
 
         // Access the "results" list and get the first item
         var result;
@@ -150,17 +146,8 @@ class _SearchScreenState extends State<SearchScreen> {
           result = data['results'][0];
         }
 
-        CollectionReference stockDataCollection =
-            FirebaseFirestore.instance.collection('userStocks');
-
-        // Get the current data in the document
-        var currentData = await stockDataCollection.doc(_user!.email).get();
-
-        // Get the current array of stock names
-        var stockNames =
-            (currentData.data() as Map<String, dynamic>)['stockNames'] ?? [];
-
-        following = stockNames.contains(stockName);
+        _getStocks();
+        following = followedStocks.contains(stockName);
 
         setState(() {
           isLoading = false;
@@ -168,7 +155,6 @@ class _SearchScreenState extends State<SearchScreen> {
           isViewing = true;
         });
       } else {
-        // not working
         setState(() {
           content = Padding(
             padding: EdgeInsetsDirectional.only(top: 100),
