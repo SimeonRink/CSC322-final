@@ -31,7 +31,6 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
   List<dynamic> stockClosePrices = [];
 
   void _getInfo() async {
-    print('phase 1');
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
     String stockName = widget.stockName;
@@ -68,19 +67,15 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
     setState(() {
       buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
     });
-    print(widget.stockName);
     final url =
         'https://api.polygon.io/v2/aggs/ticker/${widget.stockName}/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
       final response = await http.get(Uri.parse(url));
-      print(response.body);
       final Map<String, dynamic> data = json.decode(response.body);
 
       // Access the "results" list and get the first item
-      var result;
-      result = data['results'][0];
-      print(data['results'][0]);
+      var result = data['results'][0];
       // Get the current data in the document
       setState(() {
         currentPrice = result['c'].toStringAsFixed(2);
@@ -270,7 +265,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         max = stockClosePrices[i];
       }
     }
-    return max + 5;
+    return max;
   }
 
   double _getMinY() {
@@ -280,7 +275,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         min = stockClosePrices[i];
       }
     }
-    return min - 5;
+    return min;
   }
 
   _loadStockDetails() async {
@@ -310,32 +305,52 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
       double max = _getMaxY();
       double min = _getMinY();
 
+      var width = MediaQuery.of(context).size.width;
+      var heigth = MediaQuery.of(context).size.height;
+
       setState(() {
         isLoading = false;
-        content = Center(
-          child: Column(
-            children: [
-              Text(
-                'Below is the closing prices of the stock over the past 90 days.',
-                style: TextStyle(fontSize: 20),
+        content = Column(
+          children: [
+            Text(
+              'Below is the closing prices of the stock over the past 90 days.',
+              style: TextStyle(fontSize: 20),
+            ),
+            Container(
+              height: heigth * 0.4,
+              width: width,
+              child: LineChartWidget(
+                stockClosePrices: stockClosePrices,
+                maxY: max,
+                minY: min,
               ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                width: MediaQuery.of(context).size.width,
-                child: LineChartWidget(
-                  stockClosePrices: stockClosePrices,
-                  maxY: max,
-                  minY: min,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: width * 0.5,
+                  child: Text(
+                    '3 months ago',
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-              ),
-              Text(
-                '${widget.stockName} peaked with a price of \$${max.toStringAsFixed(2)} and bottomed out at \$${min.toStringAsFixed(2)}.',
-                style: TextStyle(
-                  fontSize: 20,
+                SizedBox(
+                  width: width * 0.4,
+                  child: Text(
+                    'today',
+                    textAlign: TextAlign.right,
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              '${widget.stockName} peaked with a price of \$${max.toStringAsFixed(2)} and bottomed out at \$${min.toStringAsFixed(2)}.',
+              style: TextStyle(
+                fontSize: 20,
               ),
-            ],
-          ),
+            ),
+          ],
         );
       });
       // } else {
@@ -398,11 +413,9 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
           const SizedBox(width: 5),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: content,
-        ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: content,
       ),
     );
   }

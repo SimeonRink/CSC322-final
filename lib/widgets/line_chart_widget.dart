@@ -16,53 +16,39 @@ class LineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Center(
-          child: LineChart(
-            LineChartData(
-              gridData: const FlGridData(show: false),
-              borderData: FlBorderData(
-                show: true,
-                border: const Border(
-                  bottom: BorderSide(
-                    width: 1,
-                  ),
-                  left: BorderSide(
-                    width: 1,
-                  ),
+      body: Center(
+        child: LineChart(
+          LineChartData(
+            gridData: const FlGridData(show: false),
+            borderData: FlBorderData(
+              show: true,
+              border: const Border(
+                bottom: BorderSide(
+                  width: 1,
+                ),
+                left: BorderSide(
+                  width: 1,
                 ),
               ),
-              titlesData: const FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-              ),
-              minX: 1.0,
-              maxX: stockClosePrices.length.toDouble() + 1,
-              minY: minY,
-              maxY: maxY,
-              lineBarsData: [
-                LineChartBarData(
-                  spots: [
-                    for (int i = 0; i < stockClosePrices.length; i++)
-                      FlSpot(i.toDouble() + 1,
-                          (stockClosePrices[i] as num).toDouble()),
-                  ],
-                  isCurved: true,
-                  belowBarData: BarAreaData(show: false),
-                ),
-              ],
             ),
+            titlesData: const FlTitlesData(
+              show: false,
+            ),
+            minX: 1.0,
+            maxX: stockClosePrices.length.toDouble() + 1,
+            minY: minY - 5,
+            maxY: maxY + 5,
+            lineBarsData: [
+              LineChartBarData(
+                spots: [
+                  for (int i = 0; i < stockClosePrices.length; i++)
+                    FlSpot(i.toDouble() + 1,
+                        (stockClosePrices[i] as num).toDouble()),
+                ],
+                isCurved: true,
+                belowBarData: BarAreaData(show: false),
+              ),
+            ],
           ),
         ),
       ),

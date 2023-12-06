@@ -1,5 +1,4 @@
 import 'package:egr423_starter_project/home_page.dart';
-import 'package:egr423_starter_project/news_screen.dart';
 import 'package:egr423_starter_project/search_screen.dart';
 import 'package:flutter/material.dart';
 

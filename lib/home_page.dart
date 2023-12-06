@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:egr423_starter_project/add_funds.dart';
 import 'package:egr423_starter_project/models/funds.dart';
+import 'package:egr423_starter_project/widgets/bar_chart.dart';
 import 'package:egr423_starter_project/widgets/navigation/app_drawer.dart';
 import 'package:egr423_starter_project/widgets/stock_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -129,14 +130,22 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                'Available funds: \$${funds.toStringAsFixed(2)}', // Display the balance with 2 decimal places
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+              // Text(
+              //   'Available funds: \$${funds.toStringAsFixed(2)}', // Display the balance with 2 decimal places
+              //   style: const TextStyle(
+              //     fontSize: 25,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              const SizedBox(
+                height: 30,
               ),
-              const SizedBox(height: 200),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.4,
+                width: MediaQuery.of(context).size.width,
+                child: BarChartWidget(initialFunds: 10, currentFunds: 30),
+              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
