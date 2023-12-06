@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:egr423_starter_project/add_funds.dart';
 import 'package:egr423_starter_project/models/funds.dart';
 import 'package:egr423_starter_project/widgets/navigation/app_drawer.dart';
+import 'package:egr423_starter_project/widgets/stock_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _user = FirebaseAuth.instance.currentUser;
-  List<String> _stocks = [];
   double funds = 0.0;
   double buyingPower = 0.0;
+  List<dynamic> myStocks = [];
 
   void _openAddFundOverlay() {
     showModalBottomSheet(
@@ -27,6 +28,40 @@ class _HomePageState extends State<HomePage> {
         onAddFunds: _addFund,
       ),
     );
+  }
+
+  void _getMyStocks() async {
+    CollectionReference stockDataCollection =
+        FirebaseFirestore.instance.collection('userStocks');
+
+    // Get the current data in the document
+    var currentData = await stockDataCollection.doc(_user!.email).get();
+
+    List<dynamic> boughtStocks =
+        (currentData.data() as Map<String, dynamic>)['filteredShares'] ?? [];
+
+    // Filter stocks with numberOfShares equal to 0
+    List<String> stockNames = boughtStocks
+        .where((stock) => (stock['totalShares'] ?? 0) != 0)
+        .map((stock) => stock['stockName'] as String)
+        .toSet() // Remove duplicates by converting to a set
+        .toList(); // Convert back to a list
+
+    // Update the UI with the new list of stock names
+    setState(() {
+      myStocks = stockNames;
+    });
+  }
+
+  void _updateBuyingPower() async {
+    CollectionReference stockDataCollection =
+        FirebaseFirestore.instance.collection('userStocks');
+
+    var currentData = await stockDataCollection.doc(_user!.email).get();
+
+    setState(() {
+      buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
+    });
   }
 
   _updateFunds() async {
@@ -65,35 +100,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _getMyStocks() async {
-    CollectionReference stockDataCollection =
-        FirebaseFirestore.instance.collection('userStocks');
-
-    // Get the current data in the document
-    var currentData = await stockDataCollection.doc(_user!.email).get();
-
-    // Get the current array of stock names
-    var stockNames = (currentData.data() as Map<String, dynamic>)['stockNames'];
-
-    if (!stockNames.isEmpty) {
-      for (var stock in stockNames) {
-        _stocks.add(stock);
-      }
-    }
-  }
-
   @override
   void initState() {
     _getMyStocks();
     _updateFunds();
+    _updateBuyingPower();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget content;
-
-    content = Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Investing'),
         actions: [
@@ -147,26 +164,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
-              (_stocks.isEmpty)
-                  ? const Text('You have no stocks. Start following some!')
-                  : Text('yup there are some stocks there'),
-              // : ListView.builder(
-              //     itemCount: _stocks.length,
-              //     itemBuilder: (context, index) {
-              //       return Text(
-              //         _stocks[index],
-              //         style: Theme.of(context).textTheme.titleMedium,
-              //       );
-              //     },
-              //   ),
+              SizedBox(height: 20),
+              for (var i = 0; i < myStocks.length; i++)
+                StockWidget(stock: myStocks[i]),
             ],
           ),
         ),
       ),
     );
-    // }
-
-    return content;
   }
 }

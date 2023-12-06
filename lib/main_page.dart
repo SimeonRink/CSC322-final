@@ -16,7 +16,6 @@ class _MainPageState extends State<MainPage> {
   List pages = [
     HomePage(),
     SearchScreen(),
-    NewsScreen(),
   ];
 
   int curIndex = 0;
@@ -45,11 +44,14 @@ class _MainPageState extends State<MainPage> {
         showUnselectedLabels: false,
         elevation: 0,
         items: const [
-          BottomNavigationBarItem(label: 'home', icon: Icon(Icons.home)),
           BottomNavigationBarItem(
-              label: 'Stocks', icon: Icon(Icons.search_rounded)),
+            label: 'home',
+            icon: Icon(Icons.home),
+          ),
           BottomNavigationBarItem(
-              label: 'news', icon: Icon(Icons.newspaper_rounded)),
+            label: 'Stocks',
+            icon: Icon(Icons.search_rounded),
+          ),
         ],
       ),
     );

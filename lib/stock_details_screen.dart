@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:egr423_starter_project/buy_stock.dart';
 import 'package:egr423_starter_project/models/stocks.dart';
@@ -44,23 +42,18 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         (currentData.data() as Map<String, dynamic>)['filteredShares'] ?? []);
 
     if (filteredShares.isNotEmpty) {
-      print('phase 2');
       var filteredInfo = filteredShares.firstWhere(
         (stock) => stock['stockName'] == stockName,
         orElse: () => {},
       );
       if (filteredInfo.length > 0) {
-        print(hasStock);
         setState(() {
           hasStock = true;
         });
-        print(hasStock);
       } else {
-        print(hasStock);
         setState(() {
           hasStock = false;
         });
-        print(hasStock);
       }
     } else {
       totalShares = 0;
