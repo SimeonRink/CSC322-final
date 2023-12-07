@@ -125,7 +125,6 @@ class _AuthScreenState extends State<AuthScreen> {
           'boughtStocks': boughtStocks,
           'soldStocks': soldStocks,
           'filteredShares': filteredStocks,
-          'initialFunds': 0.0,
         });
 
         // Once account is created, send verification email
