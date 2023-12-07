@@ -95,9 +95,12 @@ class _HomePageState extends State<HomePage> {
 
     var currentData = await stockDataCollection.doc(_user!.email).get();
 
-    funds = (currentData.data() as Map<String, dynamic>)['funds'];
-    buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
-    initialFunds = (currentData.data() as Map<String, dynamic>)['initialFunds'];
+    funds = (currentData.data() as Map<String, dynamic>)['funds'] ?? 0.0;
+    buyingPower =
+        (currentData.data() as Map<String, dynamic>)['buyingPower'] ?? 0.0;
+
+    initialFunds =
+        (currentData.data() as Map<String, dynamic>)['initialFunds'] ?? 0.0;
 
     setState(() {
       // Update funds with the new amount

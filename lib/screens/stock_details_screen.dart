@@ -109,7 +109,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
     List<Map<String, dynamic>> filteredShares = List<Map<String, dynamic>>.from(
         (currentData.data() as Map<String, dynamic>)['filteredShares'] ?? []);
     setState(() {
-      shares = (currentData.data() as Map<String, dynamic>)['buyingPower'];
+      buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
     });
     String stockName = widget.ticker;
 
@@ -138,11 +138,10 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         isScrollControlled: true,
         context: context,
         builder: (ctx) => sellStock(
-          currentPrice: currentPrice,
-          ticker: widget.ticker,
-          onSellStock: _sellStocks,
-          totalShares: totalShares,
-        ),
+            currentPrice: currentPrice,
+            ticker: widget.ticker,
+            onSellStock: _sellStocks,
+            totalShares: totalShares),
       );
     } catch (error) {
       print('Error: $error');
