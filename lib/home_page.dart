@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   final _user = FirebaseAuth.instance.currentUser;
   double funds = 0.0;
   double buyingPower = 0.0;
+  double initialFunds = 0.0;
   List<dynamic> myStocks = [];
 
   void _openAddFundOverlay() {
@@ -76,6 +77,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  _updateInitialFunds() async {
+    CollectionReference stockDataCollection =
+        FirebaseFirestore.instance.collection('userStocks');
+
+    var currentData = await stockDataCollection.doc(_user!.email).get();
+
+    setState(() {
+      initialFunds =
+          (currentData.data() as Map<String, dynamic>)['initialFunds'];
+    });
+  }
+
   void _addFund(Fund fund) async {
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
@@ -84,11 +97,13 @@ class _HomePageState extends State<HomePage> {
 
     funds = (currentData.data() as Map<String, dynamic>)['funds'];
     buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
+    initialFunds = (currentData.data() as Map<String, dynamic>)['initialFunds'];
 
     setState(() {
       // Update funds with the new amount
       funds += fund.amount;
       buyingPower += fund.amount;
+      initialFunds += fund.amount;
     });
 
     await stockDataCollection.doc(_user!.email).set(
@@ -99,6 +114,10 @@ class _HomePageState extends State<HomePage> {
       {'buyingPower': buyingPower},
       SetOptions(merge: true),
     );
+    await stockDataCollection.doc(_user!.email).set(
+      {'initialFunds': initialFunds},
+      SetOptions(merge: true),
+    );
   }
 
   @override
@@ -106,6 +125,7 @@ class _HomePageState extends State<HomePage> {
     _getMyStocks();
     _updateFunds();
     _updateBuyingPower();
+    _updateInitialFunds();
     super.initState();
   }
 
@@ -143,7 +163,8 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width,
-                child: BarChartWidget(initialFunds: 10, currentFunds: funds),
+                child: BarChartWidget(
+                    initialFunds: initialFunds, currentFunds: funds),
               ),
               const SizedBox(height: 20),
               Row(
