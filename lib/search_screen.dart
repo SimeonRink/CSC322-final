@@ -315,7 +315,7 @@ class _SearchScreenState extends State<SearchScreen> {
             children: [
               TextField(
                 decoration: InputDecoration(
-                  labelText: 'Enter search term',
+                  labelText: 'Enter stock ticker',
                   labelStyle: TextStyle(
                     fontSize: 20,
                   ),
