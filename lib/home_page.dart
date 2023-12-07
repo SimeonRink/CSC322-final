@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width,
-                child: BarChartWidget(initialFunds: 10, currentFunds: 30),
+                child: BarChartWidget(initialFunds: 10, currentFunds: funds),
               ),
               const SizedBox(height: 20),
               Row(

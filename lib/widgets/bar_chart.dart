@@ -44,6 +44,9 @@ class BarChartWidget extends StatelessWidget {
               ),
             ],
             titlesData: FlTitlesData(
+              rightTitles: AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),

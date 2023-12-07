@@ -98,7 +98,7 @@ class _StockWidgetState extends State<StockWidget> {
               child: Text(
                 '${stockFullName}',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.lightBlue, // Set text color
                 ),
