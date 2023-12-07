@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                 height: 30,
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width,
                 child: BarChartWidget(initialFunds: 10, currentFunds: 30),
               ),
@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 20),
               for (var i = 0; i < myStocks.length; i++)
-                StockWidget(stock: myStocks[i]),
+                StockWidget(ticker: myStocks[i]),
             ],
           ),
         ),

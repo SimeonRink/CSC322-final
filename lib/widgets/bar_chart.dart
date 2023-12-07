@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class BarChartWidget extends StatelessWidget {
   BarChartWidget({
-    super.key,
+    Key? key,
     required this.initialFunds,
     required this.currentFunds,
-  });
+  }) : super(key: key);
 
   final double initialFunds;
   final double currentFunds;
@@ -49,6 +49,26 @@ class BarChartWidget extends StatelessWidget {
               ),
               topTitles: AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
+              ),
+              bottomTitles: AxisTitles(
+                axisNameWidget: Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: Text(
+                        'Initial Funds',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: Text(
+                        'Current Funds',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,11 +1,17 @@
-import 'package:egr423_starter_project/stock_details_screen.dart';
+import 'package:egr423_starter_project/screens/stock_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class StockCard extends StatelessWidget {
-  const StockCard({super.key, required this.stockName, required this.result});
+  const StockCard({
+    super.key,
+    required this.ticker,
+    required this.result,
+    required this.stockFullName,
+  });
 
-  final String stockName;
+  final String ticker;
   final Map<String, dynamic> result;
+  final String stockFullName;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class StockCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Stock data for ${result['T']} from the previous day',
+              'Stock data for ${stockFullName} from the previous day',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -66,7 +72,8 @@ class StockCard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => StockDetailsScreen(
-                              stockName: stockName,
+                              ticker: ticker,
+                              stockFullName: stockFullName,
                             ),
                           ),
                         );

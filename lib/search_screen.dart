@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:csv/csv.dart';
 import 'package:egr423_starter_project/widgets/stock_card.dart';
 import 'package:egr423_starter_project/widgets/stock_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,6 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isLoading = false;
   bool isViewing = false;
   bool showFollowButton = true;
+  String stockFullName = '';
 
   void _showDialog(String error) {
     //find out what platform you are on to have alert dialogs display in the same style
@@ -108,9 +111,62 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  void _loadStock(String searchStock) async {
+  void _getStockFullName(String stockTicker) async {
+    // this method checks the nsadaq, nyse, and other csv files to find the full name of the stock
+
+    // Load the CSV file
+    String csvData =
+        await rootBundle.loadString('assets/nasdaq-listed_csv.csv');
+
+    // Parse the CSV data
+    List<List<dynamic>> csvTable = CsvToListConverter().convert(csvData);
+
+    // Search for the stock in the CSV data
+    for (int i = 1; i < csvTable.length; i++) {
+      List<dynamic> row = csvTable[i];
+      if (row.isNotEmpty && row[0] == stockTicker) {
+        stockFullName = row[1];
+        return;
+      }
+    }
+
+    // Load the CSV file
+    csvData = await rootBundle.loadString('assets/nyse-listed_csv.csv');
+
+    // Parse the CSV data
+    csvTable = CsvToListConverter().convert(csvData);
+
+    // Search for the stock in the CSV data
+    for (int i = 1; i < csvTable.length; i++) {
+      List<dynamic> row = csvTable[i];
+      if (row.isNotEmpty && row[0] == stockTicker) {
+        stockFullName = row[1];
+        return;
+      }
+    }
+
+    // Load the CSV file
+    csvData = await rootBundle.loadString('assets/other-listed_csv.csv');
+
+    // Parse the CSV data
+    csvTable = CsvToListConverter().convert(csvData);
+
+    // Search for the stock in the CSV data
+    for (int i = 1; i < csvTable.length; i++) {
+      List<dynamic> row = csvTable[i];
+      if (row.isNotEmpty && row[0] == stockTicker) {
+        stockFullName = row[1];
+        return;
+      }
+    }
+
+    // Stock not found
+    stockFullName = stockTicker;
+  }
+
+  void _loadStock(String ticker) async {
     final url =
-        'https://api.polygon.io/v2/aggs/ticker/$searchStock/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
+        'https://api.polygon.io/v2/aggs/ticker/$ticker/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
       if (url ==
@@ -118,6 +174,9 @@ class _SearchScreenState extends State<SearchScreen> {
         isLoading = false;
         return;
       }
+
+      _getStockFullName(ticker);
+
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
@@ -151,7 +210,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
         setState(() {
           isLoading = false;
-          content = StockCard(stockName: stockName, result: result);
+          content = StockCard(
+              ticker: stockName, result: result, stockFullName: stockFullName);
           isViewing = true;
         });
       } else {
@@ -226,7 +286,9 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               SizedBox(height: 20),
               for (var i = 0; i < followedStocks.length; i++)
-                StockWidget(stock: followedStocks[i]),
+                StockWidget(
+                  ticker: followedStocks[i],
+                ),
             ]),
           ),
         );

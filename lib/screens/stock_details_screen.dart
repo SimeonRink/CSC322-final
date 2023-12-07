@@ -10,9 +10,14 @@ import 'package:egr423_starter_project/widgets/line_chart_widget.dart';
 import 'package:intl/intl.dart';
 
 class StockDetailsScreen extends StatefulWidget {
-  const StockDetailsScreen({super.key, required this.stockName});
+  const StockDetailsScreen({
+    super.key,
+    required this.ticker,
+    required this.stockFullName,
+  });
 
-  final String stockName;
+  final String ticker;
+  final String stockFullName;
 
   @override
   State<StockDetailsScreen> createState() => _StockDetailsScreenState();
@@ -33,7 +38,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
   void _getInfo() async {
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
-    String stockName = widget.stockName;
+    String stockName = widget.ticker;
 
     var currentData = await stockDataCollection.doc(_user!.email).get();
 
@@ -68,7 +73,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
       buyingPower = (currentData.data() as Map<String, dynamic>)['buyingPower'];
     });
     final url =
-        'https://api.polygon.io/v2/aggs/ticker/${widget.stockName}/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
+        'https://api.polygon.io/v2/aggs/ticker/${widget.ticker}/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -86,7 +91,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         context: context,
         builder: (ctx) => buyStock(
           currentPrice: currentPrice,
-          ticker: widget.stockName,
+          ticker: widget.ticker,
           onBuyStock: _buyStocks,
           buyingPower: buyingPower,
           totalShares: totalShares,
@@ -106,7 +111,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
     setState(() {
       shares = (currentData.data() as Map<String, dynamic>)['buyingPower'];
     });
-    String stockName = widget.stockName;
+    String stockName = widget.ticker;
 
     // Find the totalShares for the specific stock
     var stockInfo = filteredShares.firstWhere(
@@ -115,7 +120,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
 
     double totalShares = stockInfo['totalShares'];
     final url =
-        'https://api.polygon.io/v2/aggs/ticker/${widget.stockName}/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
+        'https://api.polygon.io/v2/aggs/ticker/${widget.ticker}/prev?adjusted=true&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -134,7 +139,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         context: context,
         builder: (ctx) => sellStock(
           currentPrice: currentPrice,
-          ticker: widget.stockName,
+          ticker: widget.ticker,
           onSellStock: _sellStocks,
           totalShares: totalShares,
         ),
@@ -147,7 +152,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
   void _sellStocks(Stocks stock) async {
     CollectionReference stockDataCollection =
         FirebaseFirestore.instance.collection('userStocks');
-    String stockName = widget.stockName;
+    String stockName = widget.ticker;
 
     var currentData = await stockDataCollection.doc(_user!.email).get();
 
@@ -284,7 +289,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         .format(DateTime.now().subtract(const Duration(days: 90)));
 
     final url =
-        'https://api.polygon.io/v2/aggs/ticker/${widget.stockName}/range/1/day/$prevDate/$currentDate?adjusted=true&sort=asc&limit=120&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
+        'https://api.polygon.io/v2/aggs/ticker/${widget.ticker}/range/1/day/$prevDate/$currentDate?adjusted=true&sort=asc&limit=120&apiKey=NLdW0h6K2uq9ttogUpaDrUzMapnwLMVg';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -313,7 +318,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
         content = Column(
           children: [
             Text(
-              'Below is the closing prices of the stock over the past 90 days.',
+              'Below is the closing prices of ${widget.stockFullName} over the past 90 days.',
               style: TextStyle(fontSize: 20),
             ),
             Container(
@@ -345,7 +350,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              '${widget.stockName} peaked with a price of \$${max.toStringAsFixed(2)} and bottomed out at \$${min.toStringAsFixed(2)}.',
+              'This stock peaked with a price of \$${max.toStringAsFixed(2)} and bottomed out at \$${min.toStringAsFixed(2)}.',
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -393,7 +398,7 @@ class _StockDetailsScreenState extends State<StockDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.stockName} Details'),
+        title: Text('${widget.ticker} Details'),
         actions: [
           ElevatedButton(
             child: const Text('Buy'),
