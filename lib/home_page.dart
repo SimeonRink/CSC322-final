@@ -110,15 +110,11 @@ class _HomePageState extends State<HomePage> {
     });
 
     await stockDataCollection.doc(_user!.email).set(
-      {'funds': funds},
-      SetOptions(merge: true),
-    );
-    await stockDataCollection.doc(_user!.email).set(
-      {'buyingPower': buyingPower},
-      SetOptions(merge: true),
-    );
-    await stockDataCollection.doc(_user!.email).set(
-      {'initialFunds': initialFunds},
+      {
+        'funds': funds,
+        'buyingPower': buyingPower,
+        'initialFunds': initialFunds
+      },
       SetOptions(merge: true),
     );
   }
@@ -126,9 +122,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _getMyStocks();
-    _updateFunds();
     _updateBuyingPower();
     _updateInitialFunds();
+    _updateFunds();
     super.initState();
   }
 
